@@ -21,9 +21,10 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListDB() {
-    MaterialTheme {
+    MainActivityTheme {
         Scaffold {
             Text(text = "Hello, world!")
         }
     }
 }
+
