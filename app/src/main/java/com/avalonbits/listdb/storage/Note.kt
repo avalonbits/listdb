@@ -18,11 +18,14 @@ data class Note(
 @Dao
 interface NoteDao{
     @Query("SELECT * FROM note ORDER BY uid DESC")
-    fun getAll(): List<Note>
+    suspend fun getAll(): List<Note>
+
+    @Query("SELECT COUNT(*) FROM note")
+    suspend fun count(): Int
 
     @Insert
-    fun addNote(note: Note)
+    suspend fun addNote(note: Note)
 
     @Delete
-    fun removeNote(uid: String)
+    suspend fun removeNote(note: Note)
 }
