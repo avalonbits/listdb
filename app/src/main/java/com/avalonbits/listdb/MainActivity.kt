@@ -4,24 +4,30 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.room.Room
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import com.avalonbits.listdb.storage.Datastore
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = Datastore.Instance.get(applicationContext)
+        val db = Datastore.get(applicationContext)
 
         setContent {
             ListDB(db)
@@ -32,14 +38,45 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListDB(db: Datastore) {
-    var count by remember { mutableStateOf(10000) }
-    val dbCoroutineScope = rememberCoroutineScope()
-    dbCoroutineScope.launch { db.noteDao().count().collect() { v -> count = v} }
+    var count by remember { mutableIntStateOf(10000) }
+    LaunchedEffect(count) {
+        db.noteDao().count().collect() { v -> count = v }
+    }
 
     MainActivityTheme {
-        Scaffold {
-            Text(text = "Hello, world! We have $count notes")
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(Icons.Filled.Add, "create note")
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+        ) {
+            if (count == 0) {
+                NoNotesYet()
+            } else {
+                ShowNotes()
+            }
+            
         }
     }
+}
+
+@Composable
+fun NoNotesYet() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "No notes yet. Create one!")
+    }
+}
+
+@Composable
+fun ShowNotes() {
+
 }
 
