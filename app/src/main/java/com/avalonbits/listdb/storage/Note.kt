@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Entity
 data class Note(
@@ -18,10 +19,10 @@ data class Note(
 @Dao
 interface NoteDao{
     @Query("SELECT * FROM note ORDER BY uid DESC")
-    suspend fun getAll(): List<Note>
+    fun getAll(): Flow<List<Note>>
 
     @Query("SELECT COUNT(*) FROM note")
-    suspend fun count(): Int
+    fun count(): Flow<Int>
 
     @Insert
     suspend fun addNote(note: Note)

@@ -21,11 +21,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val db = Room.databaseBuilder(
-            applicationContext,
-            Datastore::class.java,
-            "notes"
-        ).build()
+        val db = Datastore.Instance.get(applicationContext)
 
         setContent {
             ListDB(db)
@@ -38,7 +34,7 @@ class MainActivity : ComponentActivity() {
 fun ListDB(db: Datastore) {
     var count by remember { mutableStateOf(10000) }
     val dbCoroutineScope = rememberCoroutineScope()
-    dbCoroutineScope.launch { count = db.noteDao().count()}
+    dbCoroutineScope.launch { db.noteDao().count().collect() { v -> count = v} }
 
     MainActivityTheme {
         Scaffold {
