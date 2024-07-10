@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.avalonbits.listdb.storage.Datastore
 
 class MainActivity : ComponentActivity() {
@@ -71,7 +72,7 @@ fun NoNotesYet() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "No notes yet. Create one!")
+        Text(text = stringResource(id = R.string.no_notes_yet))
     }
 }
 
